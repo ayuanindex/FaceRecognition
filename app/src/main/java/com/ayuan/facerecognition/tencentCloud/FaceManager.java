@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ayuan.facerecognition.network.HttpUtil;
 import com.ayuan.facerecognition.tencentCloud.bean.CreatePersonResultBean;
+import com.ayuan.facerecognition.tencentCloud.bean.DeleteGroupResultBean;
 import com.ayuan.facerecognition.tencentCloud.bean.GetPeopleLibraryBean;
 import com.ayuan.facerecognition.tencentCloud.bean.PersonListBean;
 import com.ayuan.facerecognition.utils.CustomerThread;
@@ -149,6 +150,30 @@ public class FaceManager {
 
             TreeMap<String, Object> init = TencentCloudAPIInitUtil.init(params);
             HttpUtil.doPost(init, PersonListBean.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除人员库
+     *
+     * @param groupId 人员库ID
+     * @param result  请求回调
+     */
+    public static void deleteGroup(String groupId, HttpUtil.Result<DeleteGroupResultBean> result) {
+        try {
+            TreeMap<String, Object> params = new TreeMap<>();
+            // 公共参数
+            params.put("Action", "DeleteGroup");
+            // 公共参数
+            params.put("Region", "ap-shanghai");
+            // 公共参数
+            params.put("Version", "2018-03-01");
+            params.put("GroupId", groupId);
+
+            TreeMap<String, Object> init = TencentCloudAPIInitUtil.init(params);
+            HttpUtil.doPost(init, DeleteGroupResultBean.class, result);
         } catch (Exception e) {
             e.printStackTrace();
         }

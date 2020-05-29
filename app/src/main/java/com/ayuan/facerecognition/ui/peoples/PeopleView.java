@@ -16,4 +16,9 @@ public interface PeopleView {
      * 刷新列表
      */
     void refreshPeopleList();
+
+    /**
+     * 退出界面
+     */
+    void closeActivity();
 }

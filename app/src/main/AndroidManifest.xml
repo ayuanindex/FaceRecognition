@@ -31,8 +31,14 @@
             </intent-filter>
         </activity>
 
+        <!--人员显示-->
         <activity
             android:name=".ui.peoples.PeopleActivity"
+            android:launchMode="singleTask" />
+
+        <!--人员添加-->
+        <activity
+            android:name=".ui.addPeople.AddPeopleActivity"
             android:launchMode="singleTask" />
     </application>
 

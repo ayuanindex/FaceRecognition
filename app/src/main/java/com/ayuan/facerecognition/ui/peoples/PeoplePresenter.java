@@ -3,6 +3,7 @@ package com.ayuan.facerecognition.ui.peoples;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.ayuan.facerecognition.App;
 import com.ayuan.facerecognition.tencentCloud.bean.PersonListBean;
 
 import java.util.List;
@@ -12,14 +13,17 @@ public class PeoplePresenter implements PeopleLogic.PeopleUiRefresh {
     private final PeopleView peopleView;
     private final PeopleLogic peopleLogic;
     private final Handler uiHandler;
+    private final String groupId;
 
-    public PeoplePresenter(PeopleView peopleView, PeopleLogic peopleLogic) {
+    public PeoplePresenter(PeopleView peopleView, PeopleLogic peopleLogic, String groupId) {
         this.peopleView = peopleView;
         this.peopleLogic = peopleLogic;
+        this.groupId = groupId;
         uiHandler = new Handler(Looper.getMainLooper());
     }
 
     public void initData() {
+        getPersonList();
     }
 
     /**
@@ -33,10 +37,8 @@ public class PeoplePresenter implements PeopleLogic.PeopleUiRefresh {
 
     /**
      * 获取人员列表
-     *
-     * @param groupId 人员库ID
      */
-    public void getPersonList(String groupId) {
+    public void getPersonList() {
         peopleLogic.getPersonList(groupId, this);
     }
 
@@ -54,10 +56,8 @@ public class PeoplePresenter implements PeopleLogic.PeopleUiRefresh {
 
     /**
      * 更新数据
-     *
-     * @param groupId 人员库ID
      */
-    public void updatePeopleList(String groupId) {
+    public void updatePeopleList() {
         peopleLogic.updatePeopleList(groupId, this);
     }
 
@@ -74,5 +74,32 @@ public class PeoplePresenter implements PeopleLogic.PeopleUiRefresh {
                 }
             });
         }
+    }
+
+    @Override
+    public void showToast(String message) {
+        update(() -> App.showToast(message));
+    }
+
+    /**
+     * 退出界面
+     */
+    @Override
+    public void closeActivity() {
+        if (peopleView != null) {
+            update(new Runnable() {
+                @Override
+                public void run() {
+                    peopleView.closeActivity();
+                }
+            });
+        }
+    }
+
+    /**
+     * 删除人员库
+     */
+    public void deleteGroup() {
+        peopleLogic.deleteGroup(groupId, this);
     }
 }

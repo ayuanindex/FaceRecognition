@@ -1,11 +1,11 @@
 package com.ayuan.facerecognition.ui.main;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        /*requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);*/
         initView();
         initListener();
         initData();
@@ -86,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void startActivity(String groupId) {
         Intent intent = new Intent(this, PeopleActivity.class);
         intent.putExtra("groupId", groupId);
-        startActivity(intent);
+        startActivityForResult(intent, 1000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mainPresenter.onActivityResult(requestCode,resultCode,data);
     }
 }

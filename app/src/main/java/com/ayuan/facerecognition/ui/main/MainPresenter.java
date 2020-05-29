@@ -1,5 +1,6 @@
 package com.ayuan.facerecognition.ui.main;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -107,5 +108,18 @@ public class MainPresenter implements MainLogic.MainUiRefresh {
     @Override
     public void showToast(String message) {
         update(() -> App.showToast(message));
+    }
+
+    /**
+     * 界面返回的回调
+     *
+     * @param requestCode 请求代码
+     * @param resultCode  结果代码
+     * @param data        数据
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1000) {
+            updatePeopleLibrary();
+        }
     }
 }

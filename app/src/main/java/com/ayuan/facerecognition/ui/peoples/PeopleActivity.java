@@ -1,5 +1,6 @@
 package com.ayuan.facerecognition.ui.peoples;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -11,10 +12,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ayuan.facerecognition.R;
 import com.ayuan.facerecognition.tencentCloud.bean.PersonListBean;
+import com.ayuan.facerecognition.ui.addPeople.AddPeopleActivity;
 
 import java.util.List;
 
 public class PeopleActivity extends AppCompatActivity implements PeopleView {
+    public static final int CAMERA_RESULT_CODE = 200;
     private CardView cardAdd;
     private SwipeRefreshLayout refreshLayout;
     private ListView lvList;
@@ -41,28 +44,22 @@ public class PeopleActivity extends AppCompatActivity implements PeopleView {
 
     private void initEvent() {
         cardAdd.setOnClickListener((View v) -> {
-
+            // 跳转到添加用户的界面
+            startActivityForResult(new Intent(this, AddPeopleActivity.class), CAMERA_RESULT_CODE);
         });
 
-        cardRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        cardRemove.setOnClickListener((View v) -> peoplePresenter.deleteGroup());
 
-            }
-        });
-
-        refreshLayout.setOnRefreshListener(() -> peoplePresenter.updatePeopleList(groupId));
+        refreshLayout.setOnRefreshListener(() -> peoplePresenter.updatePeopleList());
 
     }
 
     private void initData() {
         groupId = getIntent().getStringExtra("groupId");
 
-        peoplePresenter = new PeoplePresenter(this, new PeopleLogic());
+        peoplePresenter = new PeoplePresenter(this, new PeopleLogic(), groupId);
 
         peoplePresenter.initData();
-
-        peoplePresenter.getPersonList(groupId);
     }
 
     /**
@@ -80,5 +77,11 @@ public class PeopleActivity extends AppCompatActivity implements PeopleView {
     public void refreshPeopleList() {
         peopleListAdapter.notifyDataSetChanged();
         refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void closeActivity() {
+        getIntent().putExtra("control", 1);
+        finish();
     }
 }
