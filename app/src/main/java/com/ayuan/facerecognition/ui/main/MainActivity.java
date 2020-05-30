@@ -27,12 +27,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private MainPresenter mainPresenter;
     private MainPeopleListAdapter mainPeopleListAdapter;
     private SwipeRefreshLayout refreshLayout;
+    private CardView cardVerification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);*/
         initView();
         initListener();
         initData();
@@ -42,11 +42,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
         cardAdd = findViewById(R.id.card_add);
         lvList = findViewById(R.id.lv_list);
         refreshLayout = findViewById(R.id.refreshLayout);
+        cardVerification = findViewById(R.id.cardVerification);
     }
 
     private void initListener() {
         cardAdd.setOnClickListener((View v) -> {
             mainPresenter.addPeopleLibrary(this);
+        });
+
+        cardVerification.setOnClickListener((View v) -> {
+            // 打开系统摄像头
         });
 
         refreshLayout.setOnRefreshListener(() -> {
@@ -92,6 +97,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mainPresenter.onActivityResult(requestCode,resultCode,data);
+        mainPresenter.onActivityResult(requestCode, resultCode, data);
     }
 }

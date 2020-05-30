@@ -110,6 +110,16 @@ public class MainPresenter implements MainLogic.MainUiRefresh {
         update(() -> App.showToast(message));
     }
 
+    @Override
+    public void closeActivity() {
+
+    }
+
+    @Override
+    public void successfulPermissionApplication() {
+
+    }
+
     /**
      * 界面返回的回调
      *

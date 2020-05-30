@@ -40,6 +40,8 @@ public class CameraUtil {
     public static void startCamera(AppCompatActivity appCompatActivity) {
         CameraUtil.appCompatActivity = appCompatActivity;
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        // 调用前置摄像头
+        intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
         ContentValues values = new ContentValues(1);
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
         cameraUri = appCompatActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);

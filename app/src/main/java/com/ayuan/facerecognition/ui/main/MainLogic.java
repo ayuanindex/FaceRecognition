@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 
 import com.ayuan.facerecognition.R;
+import com.ayuan.facerecognition.base.BaseUiRefresh;
 import com.ayuan.facerecognition.network.HttpUtil;
 import com.ayuan.facerecognition.tencentCloud.FaceManager;
 import com.ayuan.facerecognition.tencentCloud.bean.CreatePersonResultBean;
@@ -26,7 +27,7 @@ public class MainLogic {
     private boolean isRefresh = false;
     private static List<GetPeopleLibraryBean.ResponseBean.GroupInfosBean> groupInfosBeans = new ArrayList<>();
 
-    interface MainUiRefresh {
+    interface MainUiRefresh extends BaseUiRefresh {
 
         /**
          * 设置数据适配器
@@ -39,13 +40,6 @@ public class MainLogic {
          * 刷新列表
          */
         void refreshPeopleList();
-
-        /**
-         * 弹出Toast
-         *
-         * @param message 需要显示的文字
-         */
-        void showToast(String message);
     }
 
     /**

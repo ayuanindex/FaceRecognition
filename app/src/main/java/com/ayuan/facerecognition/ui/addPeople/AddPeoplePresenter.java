@@ -61,7 +61,6 @@ public class AddPeoplePresenter implements AddPeopleLogic.AddPeopleUiRefresh {
     /**
      * 打开相机
      */
-    @Override
     public void startCamera() {
         if (addPeopleView != null) {
             addPeopleView.startCamera();
@@ -91,6 +90,11 @@ public class AddPeoplePresenter implements AddPeopleLogic.AddPeopleUiRefresh {
                 }
             });
         }
+    }
+
+    @Override
+    public void successfulPermissionApplication() {
+        startCamera();
     }
 
     /**

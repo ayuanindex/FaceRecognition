@@ -4,41 +4,22 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ayuan.facerecognition.base.BaseLogic;
+import com.ayuan.facerecognition.base.BaseUiRefresh;
 import com.ayuan.facerecognition.network.HttpUtil;
 import com.ayuan.facerecognition.tencentCloud.FaceManager;
 import com.ayuan.facerecognition.tencentCloud.bean.CreatePersonResultBean;
-import com.ayuan.facerecognition.utils.CameraUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class AddPeopleLogic {
+public class AddPeopleLogic extends BaseLogic {
     private static final String TAG = "AddPeopleLogic";
 
-    interface AddPeopleUiRefresh {
+    interface AddPeopleUiRefresh extends BaseUiRefresh {
 
-
-        /**
-         * 开启相机
-         */
-        void startCamera();
-
-
-        /**
-         * 显示Toast
-         *
-         * @param message 需要显示的文字
-         */
-        void showToast(String message);
-
-        /**
-         * 关闭当前界面
-         */
-        void closeActivity();
     }
 
     /**
@@ -47,9 +28,9 @@ public class AddPeopleLogic {
      * @param addPeopleActivity 上下文环境
      * @param permissions       需要请求的权限集合
      */
-    public void requestPermission(AddPeopleActivity addPeopleActivity, String[] permissions) {
+    /*public void requestPermission(AddPeopleActivity addPeopleActivity, String[] permissions) {
         addPeopleActivity.requestPermissions(permissions, 100);
-    }
+    }*/
 
     /**
      * 权限请求回调
@@ -59,7 +40,7 @@ public class AddPeopleLogic {
      * @param permissions       允许
      * @param grantResults      授予结果
      */
-    public void onRequestPermissionsResult(AddPeopleActivity addPeopleActivity, int requestCode, String[] permissions, int[] grantResults, AddPeopleUiRefresh addPeopleUiRefresh) {
+    /*public void onRequestPermissionsResult(AddPeopleActivity addPeopleActivity, int requestCode, String[] permissions, int[] grantResults, AddPeopleUiRefresh addPeopleUiRefresh) {
         int sum = 0;
         for (int grantResult : grantResults) {
             sum += grantResult;
@@ -95,14 +76,14 @@ public class AddPeopleLogic {
         Log.d(TAG, "onRequestPermissionsResult: requestCode" + requestCode);
         Log.d(TAG, "onRequestPermissionsResult: permissions" + Arrays.toString(permissions));
         Log.d(TAG, "onRequestPermissionsResult: grantResults" + Arrays.toString(grantResults));
-    }
+    }*/
 
     /**
      * 提交数据
      *
      * @param faceBitmap         包含人脸的图片
      * @param name               人员名称
-     * @param personId                 人员ID
+     * @param personId           人员ID
      * @param isMan              男性和女性的标示符
      * @param groupId            人员库ID
      * @param addPeopleUiRefresh 界面刷新回调
