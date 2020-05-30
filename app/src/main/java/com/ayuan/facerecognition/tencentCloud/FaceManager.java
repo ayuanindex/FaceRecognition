@@ -2,7 +2,6 @@ package com.ayuan.facerecognition.tencentCloud;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import com.ayuan.facerecognition.network.HttpUtil;
 import com.ayuan.facerecognition.tencentCloud.bean.CreatePersonResultBean;
@@ -12,11 +11,7 @@ import com.ayuan.facerecognition.tencentCloud.bean.PersonListBean;
 import com.ayuan.facerecognition.utils.CustomerThread;
 import com.ayuan.facerecognition.utils.EncodeAndDecode;
 
-import java.io.IOException;
 import java.util.TreeMap;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 public class FaceManager {
     private static final String TAG = "FaceManager";
@@ -35,50 +30,38 @@ public class FaceManager {
 
     /**
      * 创建人员
-     *
-     * @param bitmap     人员照片
+     *  @param bitmap     人员照片
+     * @param personName 人员姓名
      * @param groupId    人员库ID
      * @param personId   人员ID
-     * @param personName 人员姓名
+     * @param isMan      男性或者女性
+     * @param result     网络请求回调
      */
-    public static void createPerson(final Bitmap bitmap, final String personName, final int groupId, final int personId) {
-        CustomerThread.poolExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    TreeMap<String, Object> params = new TreeMap<>();
-                    // 公共参数
-                    params.put("Action", "CreatePerson");
-                    // 公共参数
-                    params.put("Region", "ap-shanghai");
-                    // 公共参数
-                    params.put("Version", "2018-03-01");
-                    // 业务参数
-                    params.put("GroupId", groupId);
-                    params.put("PersonName", personName);
-                    params.put("PersonId", personId);
-                    params.put("Image", EncodeAndDecode.bitmapToBase64(compressMatrix(compressMatrix(compressMatrix(bitmap)))));
-                    params.put("UniquePersonControl", "1");
-                    params.put("QualityControl", "1");
-                    params.put("NeedRotateDetection", "1");
+    public static void createPerson(Bitmap bitmap, String personName, String groupId, String personId, int isMan, HttpUtil.Result<CreatePersonResultBean> result) {
+        CustomerThread.poolExecutor.execute(() -> {
+            try {
+                TreeMap<String, Object> params = new TreeMap<>();
+                // 公共参数
+                params.put("Action", "CreatePerson");
+                // 公共参数
+                params.put("Region", "ap-shanghai");
+                // 公共参数
+                params.put("Version", "2018-03-01");
+                // 业务参数
+                params.put("GroupId", groupId);
+                params.put("PersonName", personName);
+                params.put("PersonId", personId);
+                params.put("Gender", isMan);
+                params.put("UniquePersonControl", "1");
+                params.put("QualityControl", "1");
+                params.put("NeedRotateDetection", "1");
+                params.put("Image", EncodeAndDecode.bitmapToBase64(compressMatrix(compressMatrix(compressMatrix(bitmap)))));
 
-                    TreeMap<String, Object> init = TencentCloudAPIInitUtil.init(params);
+                TreeMap<String, Object> init = TencentCloudAPIInitUtil.init(params);
 
-                    HttpUtil.doPost(init, CreatePersonResultBean.class, new HttpUtil.Result<CreatePersonResultBean>() {
-                        @Override
-                        public void getData(CreatePersonResultBean createPersonResultBean, Call call, Response response) {
-                            Log.d(TAG, "getData: 创建人员成功-------------" + createPersonResultBean.toString());
-                        }
-
-                        @Override
-                        public void error(Call call, IOException e) {
-                            e.printStackTrace();
-                            Log.d(TAG, "error: 创建人员出现问题----------" + e.getMessage());
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                HttpUtil.doPost(init, CreatePersonResultBean.class, result);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

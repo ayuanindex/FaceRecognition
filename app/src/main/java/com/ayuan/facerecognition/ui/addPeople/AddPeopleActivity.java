@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -30,6 +29,9 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleVie
     private RadioButton radioMan;
     private RadioButton radioWoman;
     private AddPeoplePresenter addPeoplePresenter;
+    private int isMan = 1;
+    private String groupId;
+    private Bitmap faceBitmap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,23 +54,25 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleVie
     }
 
     private void initEvent() {
-        cardAddPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addPeoplePresenter.startCameraAndRequestPermission(AddPeopleActivity.this, PERMISSIONS);
-            }
+        cardAddPicture.setOnClickListener(v -> addPeoplePresenter.startCameraAndRequestPermission(AddPeopleActivity.this, PERMISSIONS));
+
+        cardSubmit.setOnClickListener(v -> {
+            addPeoplePresenter.submit(faceBitmap, etName.getText().toString().trim(), etId.getText().toString().trim(), isMan);
         });
 
-        cardSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        radioSelectGender.setOnCheckedChangeListener((RadioGroup group, int checkedId) -> {
+            if (checkedId == R.id.radioMan) {
+                isMan = 1;
+            } else if (checkedId == R.id.radioWoman) {
+                isMan = 2;
             }
         });
     }
 
     private void initData() {
-        addPeoplePresenter = new AddPeoplePresenter(this, new AddPeopleLogic());
+        groupId = getIntent().getStringExtra("groupId");
+
+        addPeoplePresenter = new AddPeoplePresenter(this, new AddPeopleLogic(), groupId);
         addPeoplePresenter.initData();
     }
 
@@ -85,7 +89,16 @@ public class AddPeopleActivity extends AppCompatActivity implements AddPeopleVie
 
     @Override
     public void getCameraBitmap(Bitmap bmp) {
+        this.faceBitmap = bmp;
         ivIcon.setImageBitmap(bmp);
+    }
+
+    /**
+     * 关闭当前界面
+     */
+    @Override
+    public void closeActivity() {
+        finish();
     }
 
     @Override

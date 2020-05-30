@@ -14,9 +14,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
     }
 
     public static void showToast(String message) {
+        toast.cancel();
         toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.show();
     }

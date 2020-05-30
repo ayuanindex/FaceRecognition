@@ -1,11 +1,20 @@
 package com.ayuan.facerecognition.ui.addPeople;
 
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.ayuan.facerecognition.network.HttpUtil;
+import com.ayuan.facerecognition.tencentCloud.FaceManager;
+import com.ayuan.facerecognition.tencentCloud.bean.CreatePersonResultBean;
 import com.ayuan.facerecognition.utils.CameraUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class AddPeopleLogic {
     private static final String TAG = "AddPeopleLogic";
@@ -17,6 +26,19 @@ public class AddPeopleLogic {
          * 开启相机
          */
         void startCamera();
+
+
+        /**
+         * 显示Toast
+         *
+         * @param message 需要显示的文字
+         */
+        void showToast(String message);
+
+        /**
+         * 关闭当前界面
+         */
+        void closeActivity();
     }
 
     /**
@@ -73,5 +95,45 @@ public class AddPeopleLogic {
         Log.d(TAG, "onRequestPermissionsResult: requestCode" + requestCode);
         Log.d(TAG, "onRequestPermissionsResult: permissions" + Arrays.toString(permissions));
         Log.d(TAG, "onRequestPermissionsResult: grantResults" + Arrays.toString(grantResults));
+    }
+
+    /**
+     * 提交数据
+     *
+     * @param faceBitmap         包含人脸的图片
+     * @param name               人员名称
+     * @param personId                 人员ID
+     * @param isMan              男性和女性的标示符
+     * @param groupId            人员库ID
+     * @param addPeopleUiRefresh 界面刷新回调
+     */
+    public void submit(Bitmap faceBitmap, String name, String personId, int isMan, String groupId, AddPeopleUiRefresh addPeopleUiRefresh) {
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(personId) || faceBitmap == null) {
+            addPeopleUiRefresh.showToast("请将数据填写完整");
+            return;
+        }
+
+        FaceManager.createPerson(faceBitmap, name, groupId, personId, isMan, new HttpUtil.Result<CreatePersonResultBean>() {
+            @Override
+            public void getData(CreatePersonResultBean createPersonResultBean, Call call, Response response) {
+                CreatePersonResultBean.ResponseBean body = createPersonResultBean.getResponse();
+
+                if (body.getError() != null) {
+                    addPeopleUiRefresh.showToast(body.getError().getMessage());
+                } else {
+                    addPeopleUiRefresh.showToast("添加成功");
+                    addPeopleUiRefresh.closeActivity();
+                }
+
+                Log.d(TAG, "getData: 创建人员成功-------------" + createPersonResultBean.toString());
+            }
+
+            @Override
+            public void error(Call call, IOException e) {
+                e.printStackTrace();
+                Log.d(TAG, "error: 创建人员出现问题----------" + e.getMessage());
+            }
+        });
     }
 }

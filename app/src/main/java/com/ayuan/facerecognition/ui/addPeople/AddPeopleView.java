@@ -14,4 +14,9 @@ public interface AddPeopleView {
      * @param bmp 获取到的照片
      */
     void getCameraBitmap(Bitmap bmp);
+
+    /**
+     * 关闭当前界面
+     */
+    void closeActivity();
 }

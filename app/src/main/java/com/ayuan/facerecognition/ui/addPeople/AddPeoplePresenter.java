@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.ayuan.facerecognition.App;
 import com.ayuan.facerecognition.utils.CameraUtil;
 
 public class AddPeoplePresenter implements AddPeopleLogic.AddPeopleUiRefresh {
@@ -12,10 +13,13 @@ public class AddPeoplePresenter implements AddPeopleLogic.AddPeopleUiRefresh {
     private final AddPeopleLogic addPeopleLogic;
     private final AddPeopleView addPeopleView;
     private final Handler uiHandler;
+    private final String groupId;
 
-    public AddPeoplePresenter(AddPeopleView addPeopleView, AddPeopleLogic addPeopleLogic) {
+    public AddPeoplePresenter(AddPeopleView addPeopleView, AddPeopleLogic addPeopleLogic, String groupId) {
         this.addPeopleView = addPeopleView;
         this.addPeopleLogic = addPeopleLogic;
+        this.groupId = groupId;
+
         uiHandler = new Handler(Looper.myLooper());
     }
 
@@ -54,10 +58,38 @@ public class AddPeoplePresenter implements AddPeopleLogic.AddPeopleUiRefresh {
         addPeopleLogic.onRequestPermissionsResult(addPeopleActivity, requestCode, permissions, grantResults, this);
     }
 
+    /**
+     * 打开相机
+     */
     @Override
     public void startCamera() {
         if (addPeopleView != null) {
             addPeopleView.startCamera();
+        }
+    }
+
+    /**
+     * 显示Toast
+     *
+     * @param message 需要显示的文字
+     */
+    @Override
+    public void showToast(String message) {
+        update(() -> App.showToast(message));
+    }
+
+    /**
+     * 关闭当前界面
+     */
+    @Override
+    public void closeActivity() {
+        if (addPeopleView != null) {
+            update(new Runnable() {
+                @Override
+                public void run() {
+                    addPeopleView.closeActivity();
+                }
+            });
         }
     }
 
@@ -74,5 +106,17 @@ public class AddPeoplePresenter implements AddPeopleLogic.AddPeopleUiRefresh {
                 addPeopleView.getCameraBitmap(bmp);
             }
         });
+    }
+
+    /**
+     * 提交数据
+     *
+     * @param faceBitmap 包含人脸的图片
+     * @param name       人员名称
+     * @param id         人员ID
+     * @param isMan      男性和女性的标示符
+     */
+    public void submit(Bitmap faceBitmap, String name, String id, int isMan) {
+        addPeopleLogic.submit(faceBitmap, name, id, isMan, groupId, this);
     }
 }

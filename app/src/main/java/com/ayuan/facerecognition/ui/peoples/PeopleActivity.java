@@ -45,7 +45,9 @@ public class PeopleActivity extends AppCompatActivity implements PeopleView {
     private void initEvent() {
         cardAdd.setOnClickListener((View v) -> {
             // 跳转到添加用户的界面
-            startActivityForResult(new Intent(this, AddPeopleActivity.class), CAMERA_RESULT_CODE);
+            Intent intent = new Intent(this, AddPeopleActivity.class);
+            intent.putExtra("groupId", groupId);
+            startActivityForResult(intent, CAMERA_RESULT_CODE);
         });
 
         cardRemove.setOnClickListener((View v) -> peoplePresenter.deleteGroup());
@@ -75,13 +77,23 @@ public class PeopleActivity extends AppCompatActivity implements PeopleView {
 
     @Override
     public void refreshPeopleList() {
-        peopleListAdapter.notifyDataSetChanged();
-        refreshLayout.setRefreshing(false);
+        if (peopleListAdapter != null) {
+            peopleListAdapter.notifyDataSetChanged();
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
     public void closeActivity() {
         getIntent().putExtra("control", 1);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (CAMERA_RESULT_CODE == requestCode) {
+            peoplePresenter.updatePeopleList();
+        }
     }
 }

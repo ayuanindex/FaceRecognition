@@ -98,7 +98,8 @@
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入人员名称" />
+                android:hint="请输入人员名称"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -119,7 +120,8 @@
                 android:id="@+id/etId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入人员ID" />
+                android:hint="请输入人员ID"
+                android:maxLines="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -148,6 +150,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="男" />
 
                 <RadioButton
