@@ -7,10 +7,13 @@ import com.ayuan.facerecognition.network.HttpUtil;
 import com.ayuan.facerecognition.tencentCloud.bean.CreatePersonResultBean;
 import com.ayuan.facerecognition.tencentCloud.bean.DeleteGroupResultBean;
 import com.ayuan.facerecognition.tencentCloud.bean.GetPeopleLibraryBean;
+import com.ayuan.facerecognition.tencentCloud.bean.PersonBaseInfoBean;
 import com.ayuan.facerecognition.tencentCloud.bean.PersonListBean;
+import com.ayuan.facerecognition.tencentCloud.bean.SearchPersonResultBean;
 import com.ayuan.facerecognition.utils.CustomerThread;
 import com.ayuan.facerecognition.utils.EncodeAndDecode;
 
+import java.util.List;
 import java.util.TreeMap;
 
 public class FaceManager {
@@ -30,7 +33,8 @@ public class FaceManager {
 
     /**
      * 创建人员
-     *  @param bitmap     人员照片
+     *
+     * @param bitmap     人员照片
      * @param personName 人员姓名
      * @param groupId    人员库ID
      * @param personId   人员ID
@@ -160,5 +164,59 @@ public class FaceManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 查找人脸信息
+     *
+     * @param bmp    需要查找的图片
+     * @param groups 人员组
+     * @param result 请求回调
+     */
+    public static void searchFaces(Bitmap bmp, List<String> groups, HttpUtil.Result<SearchPersonResultBean> result) {
+        try {
+            TreeMap<String, Object> params = new TreeMap<>();
+            // 公共参数
+            params.put("Action", "SearchPersons");
+            // 公共参数
+            params.put("Region", "ap-shanghai");
+            // 公共参数
+            params.put("Version", "2020-03-03");
+            for (int i = 0; i < groups.size(); i++) {
+                params.put("GroupIds." + i, groups.get(i));
+            }
+            params.put("Image", EncodeAndDecode.bitmapToBase64(compressMatrix(compressMatrix(compressMatrix(bmp)))));
+            params.put("NeedRotateDetection", 1);
+
+            TreeMap<String, Object> init = TencentCloudAPIInitUtil.init(params);
+            HttpUtil.doPost(init, SearchPersonResultBean.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取人员基础信息
+     *
+     * @param personId 人员ID
+     * @param result   请求回调
+     */
+    public static void getPersonBaseInfo(String personId, HttpUtil.Result<PersonBaseInfoBean> result) {
+        try {
+            TreeMap<String, Object> params = new TreeMap<>();
+            // 公共参数
+            params.put("Action", "GetPersonBaseInfo");
+            // 公共参数
+            params.put("Region", "ap-shanghai");
+            // 公共参数
+            params.put("Version", "2020-03-03");
+            params.put("PersonId", personId);
+
+            TreeMap<String, Object> init = TencentCloudAPIInitUtil.init(params);
+            HttpUtil.doPost(init, PersonBaseInfoBean.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

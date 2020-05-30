@@ -1,5 +1,9 @@
 package com.ayuan.facerecognition.ui.main;
 
+import android.graphics.Bitmap;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ayuan.facerecognition.tencentCloud.bean.GetPeopleLibraryBean;
 
 import java.util.List;
@@ -20,4 +24,23 @@ public interface MainView {
      * @param groupId 人员库ID
      */
     void startActivity(String groupId);
+
+    /**
+     * 打开相机
+     */
+    void startCamera();
+
+    /**
+     * 获取到相机拍摄的照片
+     *
+     * @param bmp 图片
+     */
+    void setImageData(Bitmap bmp);
+
+    /**
+     * 获取上下文环境
+     *
+     * @return 返回activity
+     */
+    AppCompatActivity getActivity();
 }

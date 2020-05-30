@@ -24,7 +24,7 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class CameraUtil {
-    private static final int REQUEST_CODE_IMAGE_CAMERA = 1;
+    public static final int REQUEST_CODE_IMAGE_CAMERA = 1;
     private static Uri cameraUri;
     private static AppCompatActivity appCompatActivity;
 

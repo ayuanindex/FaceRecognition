@@ -2,6 +2,8 @@ package com.ayuan.facerecognition.base;
 
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public interface BaseUiRefresh {
     String TAG = "未实现方法";
 
@@ -27,4 +29,15 @@ public interface BaseUiRefresh {
     default void successfulPermissionApplication() {
         Log.d(TAG, "successfulPermissionApplication: ");
     }
+
+    /**
+     * 获取上下文环境
+     *
+     * @return 上下文环境
+     */
+    default AppCompatActivity getActivity() {
+        Log.d(TAG, "getActivity: ");
+        return null;
+    }
+
 }

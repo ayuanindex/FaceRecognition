@@ -1,10 +1,13 @@
 package com.ayuan.facerecognition.ui.main;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -13,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.ayuan.facerecognition.R;
 import com.ayuan.facerecognition.tencentCloud.bean.GetPeopleLibraryBean;
 import com.ayuan.facerecognition.ui.peoples.PeopleActivity;
+import com.ayuan.facerecognition.utils.CameraUtil;
 
 import java.util.List;
 
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         cardVerification.setOnClickListener((View v) -> {
             // 打开系统摄像头
+            mainPresenter.requestPermission(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE});
         });
 
         refreshLayout.setOnRefreshListener(() -> {
@@ -95,8 +100,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
+    public void startCamera() {
+        CameraUtil.startCamera(this);
+    }
+
+    @Override
+    public void setImageData(Bitmap bmp) {
+        // TODO: 2020/5/30
+    }
+
+    /**
+     * @return 返回上下文环境
+     */
+    @Override
+    public AppCompatActivity getActivity() {
+        return this;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mainPresenter.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mainPresenter.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }
