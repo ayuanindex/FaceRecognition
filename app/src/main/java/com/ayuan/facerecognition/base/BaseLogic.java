@@ -8,7 +8,7 @@ import com.ayuan.facerecognition.utils.CameraUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class BaseLogic {
+public abstract class BaseLogic {
     private static final String TAG = "BaseLogic";
 
 
