@@ -194,6 +194,10 @@ public class MainLogic extends BaseLogic {
      */
     public void searchFaces(Bitmap bmp, MainUiRefresh mainUiRefresh) {
         searchBitmap = bmp;
+        if (groups.size() == 0) {
+            mainUiRefresh.showToast("请先创建人员库");
+            return;
+        }
         FaceManager.searchFaces(bmp, groups, new HttpUtil.Result<SearchPersonResultBean>() {
             @Override
             public void getData(SearchPersonResultBean searchPersonResultBean, Call call, Response response) {
