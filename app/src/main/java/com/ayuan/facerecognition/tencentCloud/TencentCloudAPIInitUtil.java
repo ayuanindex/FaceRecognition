@@ -14,7 +14,6 @@ import javax.crypto.spec.SecretKeySpec;
 public class TencentCloudAPIInitUtil {
     private final static String CHARSET = "UTF-8";
     private static final String TAG = "哈哈哈";
-    private static final char[] hexCode = "0123456789ABCDEF".toCharArray();
     private static final char[] encodeMap = initEncodeMap();
 
     // 请替换自己的腾讯云
